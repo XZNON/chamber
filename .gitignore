@@ -1,0 +1,10 @@
+myenv
+.env
+
+CHECKLIST.md
+tips.md
+
+
+subprocess_test.py
+
+__pycache__
