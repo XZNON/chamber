@@ -14,34 +14,29 @@ def runShell(schema : ShellCommandSchema):
     try:
         logger.info(f"Executing Shell command: {' '.join(fullCommand)} (cwd = {cwd})")
     
-
-        result = subprocess.run(
-            fullCommand if not schema.shell else " ".join(fullCommand), 
-            cwd=schema.cwd,
-            capture_output=schema.captureOutput,
+        process = subprocess.Popen(
+            fullCommand if not schema.shell else " ".join(fullCommand),
+            cwd = schema.cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
             text=True,
-            shell=schema.shell,
+            shell=schema.shell
         )
 
-        stdout = result.stdout.strip() if result.stdout else ""
-        stderr = result.stderr.strip() if result.stderr else ""
+        outputLines = []
+        for line in process.stdout:
+            line = line.strip()
+            if line:
+                logger.info(f"> {line}")
+                outputLines.append(line)
+        process.wait()
 
-        if result.returncode == 0:
-            logger.info(f"Command succeeded: {stdout or 'no output'}")
-            return FileOutput(
-                filename="",
-                path=cwd,
-                status="success",
-                message=stdout or "Command executed successfully."
-            )
+        if process.returncode == 0:
+            logger.info(f"Command succeeded")
         else:
-            logger.error(f"Command failed: {stderr}")
-            return FileOutput(
-                filename="",
-                path=cwd,
-                status="error",
-                message=stderr or f"Command failed with exit code {result.returncode}"
-            )
+            logger.error(f"Command failed: {process.returncode}")
+        
+        return "\n".join(outputLines)
 
     except Exception as e:
         logger.error(f"Exception while executing command: {e}")
