@@ -3,7 +3,9 @@ myenv
 
 CHECKLIST.md
 tips.md
-
+logs
+CHAMBER_CHECKLIST.md
+CHAMBER_VERSIONING.md
 
 subprocess_test.py
 
