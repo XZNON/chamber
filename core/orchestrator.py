@@ -1,17 +1,66 @@
 from models.chamber_state import ChamberState
+from utils.domain_classifier import classifyDomains
 from core.logger import get_logger
+
+from dataclasses import dataclass
 
 logger = get_logger("Orchestrator")
 
 def orchestrator(state : ChamberState) -> ChamberState:
     goals = state.get('goals',[])
+    descriptions = [g.description for g in goals]
 
+    domains = classifyDomains(goals)
+    needDecomposition = [False] * len(goals)
     executionPlan = []
 
     #each gaol will have its execution step, it should have a {domain, intent, requires_decomposition}
-    for goal in goals:
-        ...
+    for i in range(len(goals)):
+        executionPlan.append({
+            "domain" : domains[i],
+            "intent" : descriptions[i],
+            "need_decomposition" : needDecomposition[i],
+            "status" : "pending"
+        })
+    
+    return {
+        'execution_plan' : executionPlan
+    }
 
+
+################################################################################################################################################
+##############################################################     Testing      ################################################################ 
+################################################################################################################################################
+
+
+@dataclass
+class Goal:
+    description : str
+if __name__ == "__main__":
+    mock_goals = [
+        Goal(description='Define the project folder structure'),
+        Goal(description='Define database models for shoes'),
+        Goal(description='Add styling and user interface polish to ensure a smooth and attractive user experience'),
+        Goal(description='Build UI components for shopping cart'),
+        Goal(description='write a code for fibonacci series'),
+        Goal(description='Create API routes to support core e-commerce functionalities like product listing, user registration, login, and order placement')
+    ]
+
+    dummyState = {
+        'input': ["Create a shoe store"],
+        'goals': mock_goals,
+        'workspace': {},
+        'execution_plan': []
+    }
+    
+    print("--- Running Orchestrator Test ---")
+    result = orchestrator(dummyState)
+
+    import json
+    print(json.dumps(result, indent=2))
+    
+    assert len(result['execution_plan']) == len(mock_goals)
+    print("\nTest Passed: Execution plan matches goal count.")
 
 # {'goals': [Goal(description='Define the project folder structure for the full stack e-commerce website'),
 #  Goal(description='Set up the backend service to handle product data, user management, and order processing'),

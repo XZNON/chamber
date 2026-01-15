@@ -1,5 +1,5 @@
 from pydantic import BaseModel,Field
-from typing import Literal
+from typing import Literal,List
 
 DomainType = Literal[
     'structure',
@@ -16,4 +16,7 @@ DomainType = Literal[
 ]
 
 class Domain(BaseModel):
-    domain : DomainType = Field(description="The primary domain this goal belongs to.") 
+    domain : DomainType
+
+class BatchClassifyDomain(BaseModel):
+    results : List[Domain]
