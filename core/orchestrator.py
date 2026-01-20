@@ -12,21 +12,45 @@ def orchestrator(state : ChamberState) -> ChamberState:
     goals = state.get('goals',[])
     descriptions = [g.description for g in goals]
 
-    domainAndDecomposition = classifyDomains(goals)
+    try:
+        domainAndDecomposition = classifyDomains(goals)
+        logger.info("Orchestrator generated domains successfully")
+    except Exception as e:
+        logger.error(f"Reasoner Failed: {e}")
+        return {
+            "error":str(e),
+            "metadata":{
+                "source":"reasoner_[classifyDomains]",
+                "status":"failed"
+            }
+        }
 
 
     executionPlan = []
 
     #each goal will have its execution step, it should have a {domain, intent, requires_decomposition}
     for i in range(len(goals)):
-        needDecom = heuristicNeedsDecomposition(goals[i].description) or domainAndDecomposition[i]['needs_decomposition']
-        executionPlan.append({
-            "domain" : domainAndDecomposition[i]["domain"],
-            "intent" : descriptions[i],
-            "need_decomposition" : needDecom,
-            "status" : "pending"
-        })
+        try:
+            needDecom = heuristicNeedsDecomposition(goals[i].description) or domainAndDecomposition[i]['needs_decomposition']
+            executionPlan.append({
+                "domain" : domainAndDecomposition[i]["domain"],
+                "intent" : descriptions[i],
+                "need_decomposition" : needDecom,
+                "status" : "pending"
+            })
+        except Exception as e:
+            
+            logger.error(f"Reasoner Failed: {e}")
+            return {
+                "error":str(e),
+                "metadata":{
+                    "source":"reasoner_[executionPlans]",
+                    "status":"failed"
+            }
+            }
     
+    logger.info("Orchestrator generated plans successfully")
+
     return {
         'execution_plan' : executionPlan
     }

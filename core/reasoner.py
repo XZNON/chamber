@@ -42,15 +42,11 @@ def reasoner(state : ChamberState) -> ChamberState:
             }
         ])
 
-        logger.info("Reasoner generated plan successfully")
+        logger.info("Reasoner generated Goals successfully")
 
         return {
             'goals':response.goals,
-            "error":None,
-            "metadata":{
-                "model":"gpt-4.1-mini",
-                "source":"reasoner"
-            }
+            "error":None
         }
     except Exception as e:
         logger.error(f"Reasoner Failed: {e}")

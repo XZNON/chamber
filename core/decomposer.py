@@ -18,28 +18,40 @@ def decomposer(state : ChamberState) -> ChamberState:
     executablePlan = state.get('execution_plan',[])
     goals = state.get('goals',[])
 
-    decomposeablePlan = []
 
     if executablePlan:
         for idx,goal in enumerate(executablePlan):
-            if goal['need_decomposition']:
-                # send the goal to the LLM to further get decomposed into atomic sub-goals
+            try:
+                if goal['need_decomposition']:
+                    # send the goal to the LLM to further get decomposed into atomic sub-goals
 
-                #sample outpur for the LLM call
-                subGoals =  [
-                    Goal(description='Create API route for product listing'),
-                    Goal(description='Create API route for order placement'),
-                    Goal(description='Create API route for user registration'),
-                    Goal(description='Create API route for login')
-                ]
+                    # subGoals = createSubGoals() # to-do
+                        
+                    #sample output for the LLM call
+                    subGoals =  [
+                        Goal(description='Create API route for product listing'),
+                        Goal(description='Create API route for order placement'),
+                        Goal(description='Create API route for user registration'),
+                        Goal(description='Create API route for login')
+                    ]
 
-                newGoals = (
-                    goals[:idx] + subGoals + goals[idx+1:]
-                )
+                    newGoals = (
+                        goals[:idx] + subGoals + goals[idx+1:]
+                    )
 
-            return {
-                'goals' : newGoals
-            }
+                logger.info("Decomposer added subGoals successfully")
+                return {
+                    'goals' : newGoals
+                }
+            except Exception as e:
+                logger.error(f"Decomposer failed: {e}")
+                return {
+                    'error' : str(e),
+                    'metadata' : {
+                        "source":"decomposer_[subGoalAdditionLoop]",
+                        "status":"failed"
+                    }
+                }
     return state
                     
 @dataclass
