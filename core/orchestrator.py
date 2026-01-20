@@ -1,7 +1,9 @@
 from models.chamber_state import ChamberState
 from utils.domain_classifier import classifyDomains
+from utils.decompostion_heuristic import heuristicNeedsDecomposition
 from core.logger import get_logger
 
+#########################   testing libraries  #########################
 from dataclasses import dataclass
 
 logger = get_logger("Orchestrator")
@@ -10,16 +12,17 @@ def orchestrator(state : ChamberState) -> ChamberState:
     goals = state.get('goals',[])
     descriptions = [g.description for g in goals]
 
-    domains = classifyDomains(goals)
-    needDecomposition = [False] * len(goals)
+    domainAndDecomposition = classifyDomains(goals)
+
+
     executionPlan = []
 
-    #each gaol will have its execution step, it should have a {domain, intent, requires_decomposition}
+    #each goal will have its execution step, it should have a {domain, intent, requires_decomposition}
     for i in range(len(goals)):
         executionPlan.append({
-            "domain" : domains[i],
+            "domain" : domainAndDecomposition[i]["domain"],
             "intent" : descriptions[i],
-            "need_decomposition" : needDecomposition[i],
+            "need_decomposition" : heuristicNeedsDecomposition(domainAndDecomposition[i]["needs_decomposition"],goals[i]),
             "status" : "pending"
         })
     
@@ -36,13 +39,13 @@ def orchestrator(state : ChamberState) -> ChamberState:
 @dataclass
 class Goal:
     description : str
+
 if __name__ == "__main__":
     mock_goals = [
         Goal(description='Define the project folder structure'),
         Goal(description='Define database models for shoes'),
         Goal(description='Add styling and user interface polish to ensure a smooth and attractive user experience'),
         Goal(description='Build UI components for shopping cart'),
-        Goal(description='write a code for fibonacci series'),
         Goal(description='Create API routes to support core e-commerce functionalities like product listing, user registration, login, and order placement')
     ]
 

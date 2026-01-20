@@ -17,6 +17,7 @@ DomainType = Literal[
 
 class Domain(BaseModel):
     domain : DomainType
+    needs_decomposition : bool = False
 
 class BatchClassifyDomain(BaseModel):
     results : List[Domain]
