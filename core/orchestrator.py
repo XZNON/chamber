@@ -19,10 +19,11 @@ def orchestrator(state : ChamberState) -> ChamberState:
 
     #each goal will have its execution step, it should have a {domain, intent, requires_decomposition}
     for i in range(len(goals)):
+        needDecom = heuristicNeedsDecomposition(goals[i].description) or domainAndDecomposition[i]['needs_decomposition']
         executionPlan.append({
             "domain" : domainAndDecomposition[i]["domain"],
             "intent" : descriptions[i],
-            "need_decomposition" : heuristicNeedsDecomposition(domainAndDecomposition[i]["needs_decomposition"],goals[i]),
+            "need_decomposition" : needDecom,
             "status" : "pending"
         })
     
