@@ -1,7 +1,7 @@
 from models.chamber_state import ChamberState
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.prompts import PromptTemplate
-from models.reasoner_output_schema import ReasonerOutputSchema
+from models.reasoner_output_schema import GoalsSchema
 from core.logger import get_logger
 from core.config import MODEL
 
@@ -22,7 +22,7 @@ def reasoner(state : ChamberState) -> ChamberState:
     inpt = state['input'][-1] 
 
     model = MODEL
-    modelWithStructuredOutput = model.with_structured_output(ReasonerOutputSchema,method="function_calling")
+    modelWithStructuredOutput = model.with_structured_output(GoalsSchema,method="function_calling")
 
 
     promptTemplate = PromptTemplate(

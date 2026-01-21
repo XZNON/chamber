@@ -2,6 +2,7 @@
 from models.chamber_state import ChamberState
 from core.logger import get_logger
 from dataclasses import dataclass
+from utils.decompose_goals import decomposeGoal
 
 logger = get_logger("Decomposer")
 
@@ -20,12 +21,16 @@ def decomposer(state : ChamberState) -> ChamberState:
 
 
     if executablePlan:
-        for idx,goal in enumerate(executablePlan):
+        for idx,plan in enumerate(executablePlan):
             try:
-                if goal['need_decomposition']:
-                    # send the goal to the LLM to further get decomposed into atomic sub-goals
+                if plan['need_decomposition']:
+                    intent = plan.get('intent','')
 
-                    # subGoals = createSubGoals() # to-do
+                    # send the plan to the LLM to further get decomposed into atomic sub-goals
+                    if intent:     
+                        subGoals = decomposeGoal(intent) # to-do
+                    else:
+                        continue
                         
                     #sample output for the LLM call
                     subGoals =  [
@@ -59,7 +64,7 @@ class Goal:
     description : str
 
 @dataclass
-class ReasonerOutputSchema:
+class GoalsSchema:
     goals : list[Goal] 
 if __name__ == "__main__":
     execution_plan = [
@@ -84,10 +89,10 @@ if __name__ == "__main__":
     result = decomposer(dummy_state)
 
     import json
-    print(json.dumps(
-        {"goals": [g.description for g in result["goals"]]},
-        indent=2
-    ))
+    # print(json.dumps(
+    #     {"goals": [g.description for g in result["goals"]]},
+    #     indent=2
+    # ))
 
 
 #used to decompose vague/large goals into small atomic executable goals for the executioner
