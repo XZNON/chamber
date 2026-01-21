@@ -1,6 +1,7 @@
 #decomposer node
 from models.chamber_state import ChamberState
 from core.logger import get_logger
+from models.reasoner_output_schema import GoalsSchema
 from dataclasses import dataclass
 from utils.decompose_goals import decomposeGoal
 
@@ -28,18 +29,11 @@ def decomposer(state : ChamberState) -> ChamberState:
 
                     # send the plan to the LLM to further get decomposed into atomic sub-goals
                     if intent:     
-                        subGoals = decomposeGoal(intent) # to-do
+                        subGoalsSchema = decomposeGoal(intent) # to-do
+                        subGoals = subGoalsSchema.goals
                     else:
                         continue
-                        
-                    #sample output for the LLM call
-                    subGoals =  [
-                        Goal(description='Create API route for product listing'),
-                        Goal(description='Create API route for order placement'),
-                        Goal(description='Create API route for user registration'),
-                        Goal(description='Create API route for login')
-                    ]
-
+                    
                     newGoals = (
                         goals[:idx] + subGoals + goals[idx+1:]
                     )
@@ -89,10 +83,10 @@ if __name__ == "__main__":
     result = decomposer(dummy_state)
 
     import json
-    # print(json.dumps(
-    #     {"goals": [g.description for g in result["goals"]]},
-    #     indent=2
-    # ))
+    print(json.dumps(
+        {"goals": [g.description for g in result["goals"]]},
+        indent=2
+    ))
 
 
 #used to decompose vague/large goals into small atomic executable goals for the executioner

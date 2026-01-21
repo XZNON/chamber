@@ -2,20 +2,11 @@ from models.chamber_state import ChamberState
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.prompts import PromptTemplate
 from models.reasoner_output_schema import GoalsSchema
+from utils.load_prompt import loadPrompt
 from core.logger import get_logger
 from core.config import MODEL
 
 logger = get_logger("Reasoner")
-
-def loadPrompt(filepath : str="prompts/reasoner_prompt.txt")->str:
-    """Loads system prompt for the reasoner from text file"""
-    try:
-        with open(filepath,"r",encoding="utf-8") as f:
-            return f.read()
-    except Exception as e:
-        logger.error(f"Reasoner could not read the prompt")
-        return "You are chamber a development reasoning model, output only valid JSON"
-        
 
 def reasoner(state : ChamberState) -> ChamberState:
     '''reasoner node, this will get input from the user and device a plan'''
@@ -26,7 +17,7 @@ def reasoner(state : ChamberState) -> ChamberState:
 
 
     promptTemplate = PromptTemplate(
-        template=loadPrompt()
+        template=loadPrompt("prompts/reasoner_prompt.txt")
     )
     systemPrompt = promptTemplate.invoke({}).to_string()
 

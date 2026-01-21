@@ -7,7 +7,7 @@ from dataclasses import dataclass
 def classifyDomains(goals :list[str]) -> list[str]:
     '''Classify goals into domains in a single batch, order preserved'''
 
-    structModel = MODEL.with_structured_output(BatchClassifyDomain)
+    structModel = MODEL.with_structured_output(BatchClassifyDomain,method='function_calling')
 
     goalsBlock = "\n".join(f"{i+1}. {goal}" for i,goal in enumerate(goals))
     prompt = f"""
