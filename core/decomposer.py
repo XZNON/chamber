@@ -19,42 +19,24 @@ def decomposer(state : ChamberState) -> ChamberState:
 
     executablePlan = state.get('execution_plan',[])
     goals = state.get('goals',[])
-    depth = state.get('decmposition_depth',0)
-    print(depth)
+    depth = state.get('decomposition_depth',0)
+    # print(depth)
 
-    if executablePlan:
-        for idx,plan in enumerate(executablePlan):
-            try:
-                if plan['need_decomposition']:
-                    intent = plan.get('intent','')
-
-                    # send the plan to the LLM to further get decomposed into atomic sub-goals
-                    if intent:     
-                        subGoalsSchema = decomposeGoal(intent) # to-do
-                        subGoals = subGoalsSchema.goals
-                    else:
-                        continue
-                    
-                    newGoals = (
-                        goals[:idx] + subGoals + goals[idx+1:]
-                    )
-
-                    print(newGoals)
-
+    for idx,plan in enumerate(executablePlan):
+            if plan['need_decomposition']:
+                intent = plan.get('intent','')
+ 
+                subGoalsSchema = decomposeGoal(intent) 
+                subGoals = subGoalsSchema.goals
+                newGoals = (
+                    goals[:idx] + subGoals + goals[idx+1:]
+                )
 
                 logger.info("Decomposer added subGoals successfully")
                 return {
                     'goals' : newGoals,
-                    'decmposition_depth' : depth + 1
-                }
-            except Exception as e:
-                logger.error(f"Decomposer failed: {e}")
-                return {
-                    'error' : str(e),
-                    'metadata' : {
-                        "source":"decomposer_[subGoalAdditionLoop]",
-                        "status":"failed"
-                    }
+                    'decomposition_depth' : depth + 1,
+                    'execution_plan' : []
                 }
     return state
                     

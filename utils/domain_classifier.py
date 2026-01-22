@@ -11,46 +11,36 @@ def classifyDomains(goals :list[str]) -> list[str]:
 
     goalsBlock = "\n".join(f"{i+1}. {goal}" for i,goal in enumerate(goals))
     prompt = f"""
-        You are a classifier.
+        You are Chamber’s Classifier.
 
-        Your task is to analyze each goal and:
-        1. Assign EXACTLY ONE domain.
-        2. Decide whether the goal requires further decomposition.
+        Your task is to analyze each provided goal and determine its technical domain and whether it requires further decomposition before execution.
 
-        A goal requires decomposition if it:
-        - Describes setting up or defining a system or architecture.
-        - Involves multiple responsibilities, components, or entities.
-        - Is high-level, vague, or cannot be completed in a single concrete step.
+        ### DECOMPOSITION CRITERIA:
+        Set `needs_decomposition` to `true` if the goal:
+        - Uses plural nouns (e.g., "endpoints," "models," "components").
+        - Uses broad verbs like "Setup," "Develop," "Implement," or "Design" without a specific singular target.
+        - Describes a system with more than one functional responsibility.
+        - Is a milestone that will result in the creation of multiple files.
 
-        A goal does NOT require decomposition if it:
-        - Is a single, atomic action.
-        - Can reasonably be completed by one executor in one pass.
+        Set `needs_decomposition` to `false` if the goal:
+        - Targets a single file or a single specific function (e.g., "Create the User model," "Define the GET /login route").
+        - Is a concrete, singular action that an LLM can complete in a single output.
 
-        Allowed domains:
-        - structure
-        - backend
-        - database
-        - api
-        - frontend
-        - ui
-        - styling
-        - testing
-        - code
-        - deployment
-        - unknown
+        ### DOMAIN SELECTION:
+        Assign EXACTLY ONE from: [structure, backend, database, api, frontend, ui, styling, testing, code, deployment, unknown].
 
-        Rules:
-        - Classify each goal independently.
-        - Preserve the original order.
-        - Return ONLY valid JSON.
-        - Do NOT explain your choices.
-        - Do NOT include any extra fields.
-        - Do NOT include code, commands, tools, or frameworks.
-        - The number of results MUST exactly match the number of goals.
-        - needs_decomposition MUST be a boolean (true or false).
+        example:
+        goal:
+        -Create the root project directory named weather-web-application. (does not need decomposition as it is a single executable goal)
+        -Within the root directory, create an api folder to handle API routes and controllers related to weather data.(needs decomposition)
 
-        Goals:
-        {goalsBlock}
+        ### RULES:
+        - Analyze goals independently and preserve original order.
+        - No prose, no markdown, no explanations—ONLY valid JSON.
+        - The results array length must exactly match the input goals length.
+
+        ### INPUT:
+        Goals: {goalsBlock}
 
         Return JSON in EXACTLY this format:
 

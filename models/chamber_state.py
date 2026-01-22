@@ -7,7 +7,7 @@ def mergeLists(a : list,b : list) -> list:
 class ChamberState(TypedDict):
     input : Annotated[list[str],add] 
     goals : list[dict]
-    execution_plan : Annotated[list[dict],mergeLists]
+    execution_plan : list[dict]
     workspace : dict
     error : Optional[str]
     metadata : Optional[dict]

@@ -10,12 +10,11 @@ def decomposer_router(state : ChamberState) -> Literal['decomposer','executioner
     depth = state.get('decomposition_depth',0)
 
     print(depth)
-    if depth >= 8:
-        logger.info('Decomposition depth reached')
-        return 'executioner'
 
-    if not executionPlan:
-        logger.error(f'No execution plan provided')
+    #should i have guard-rails? and how much?
+    #test tomorrow
+    if depth >= 3:
+        logger.info('Decomposition depth reached')
         return 'executioner'
     
     for plan in executionPlan:

@@ -26,7 +26,13 @@ chamberGraphStruct.add_node('executioner',executioner)
 
 chamberGraphStruct.add_edge(START,'reasoner')
 chamberGraphStruct.add_edge('reasoner','orchestrator')
-chamberGraphStruct.add_conditional_edges('orchestrator',decomposer_router)
+chamberGraphStruct.add_conditional_edges(
+    'orchestrator',decomposer_router,
+    {
+        'decomposer':'decomposer',
+        'executioner' : 'executioner'
+    }
+    )
 chamberGraphStruct.add_edge('decomposer','orchestrator')
 chamberGraphStruct.add_edge('executioner',END)
 
@@ -34,7 +40,7 @@ chamberGraph = chamberGraphStruct.compile()
 
 
 if __name__ == "__main__":
-    input = ['I need to create a simple webpage for selling shoes, select the frameworks yourself.']
+    input = ['create a frontend for my shoe selling store.']
 
     res = chamberGraph.invoke({"input" : input})
 
