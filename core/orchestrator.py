@@ -31,11 +31,12 @@ def orchestrator(state : ChamberState) -> ChamberState:
     #each goal will have its execution step, it should have a {domain, intent, requires_decomposition}
     for i in range(len(goals)):
         try:
-            needDecom = heuristicNeedsDecomposition(goals[i].description) or domainAndDecomposition[i]['needs_decomposition']
+            #huristicNeedsDecomposition causing the graph to looop over and over and over
+            # needDecom = heuristicNeedsDecomposition(goals[i].description) or domainAndDecomposition[i]['needs_decomposition']
             executionPlan.append({
                 "domain" : domainAndDecomposition[i]["domain"],
                 "intent" : descriptions[i],
-                "need_decomposition" : needDecom,
+                "need_decomposition" : domainAndDecomposition[i]['needs_decomposition'],
                 "status" : "pending"
             })
         except Exception as e:

@@ -7,13 +7,19 @@ logger = get_logger("Decomposer Router")
 def decomposer_router(state : ChamberState) -> Literal['decomposer','executioner']:
 
     executionPlan = state.get('execution_plan',[])
+    depth = state.get('decomposition_depth',0)
+
+    print(depth)
+    if depth >= 8:
+        logger.info('Decomposition depth reached')
+        return 'executioner'
 
     if not executionPlan:
         logger.error(f'No execution plan provided')
         return 'executioner'
     
     for plan in executionPlan:
-        if plan.get('needs_decomposition',False):
+        if plan.get('need_decomposition',False):
             logger.info('Plan found that needs decomposition, routing to decomposer')
             return 'decomposer'
     

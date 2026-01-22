@@ -1,21 +1,43 @@
 from langgraph.graph import StateGraph,START,END
-from langchain_openai import ChatOpenAI
-from langchain.chat_models import init_chat_model
-from typing import TypedDict
-from core.config import GOOGLE_API_KEY,OPENAI_API_KEY
-from core.executor import executePlan
+from models.chamber_state import ChamberState
+from core.reasoner import reasoner
+from core.orchestrator import orchestrator
+from core.decomposer import decomposer
+from core.executor import executioner
+from utils.decomposer_router import decomposer_router
+from dotenv import load_dotenv
+from core.logger import get_logger
+import json
 
-def runPlan(state):
-    plan = state.get("plan",[])
-    result = executePlan(plan)
-    return {
-        'result':result
-    }
+load_dotenv()
 
-graph = StateGraph(dict)
-graph.add_node("runPlan",runPlan)
+logger = get_logger("Chamber Graph")
 
-graph.add_edge(START,"runPlan")
-graph.add_edge("runPlan",END)
 
-compiled = graph.compile()
+#########################################Graph Building#####################################################
+
+chamberGraphStruct = StateGraph(ChamberState) 
+
+chamberGraphStruct.add_node('reasoner',reasoner)
+chamberGraphStruct.add_node('orchestrator',orchestrator)
+chamberGraphStruct.add_node('decomposer',decomposer)
+chamberGraphStruct.add_node('executioner',executioner)
+
+
+chamberGraphStruct.add_edge(START,'reasoner')
+chamberGraphStruct.add_edge('reasoner','orchestrator')
+chamberGraphStruct.add_conditional_edges('orchestrator',decomposer_router)
+chamberGraphStruct.add_edge('decomposer','orchestrator')
+chamberGraphStruct.add_edge('executioner',END)
+
+chamberGraph = chamberGraphStruct.compile()
+
+
+if __name__ == "__main__":
+    input = ['I need to create a simple webpage for selling shoes, select the frameworks yourself.']
+
+    res = chamberGraph.invoke({"input" : input})
+
+    print(res)
+
+    

@@ -19,7 +19,8 @@ def decomposer(state : ChamberState) -> ChamberState:
 
     executablePlan = state.get('execution_plan',[])
     goals = state.get('goals',[])
-
+    depth = state.get('decmposition_depth',0)
+    print(depth)
 
     if executablePlan:
         for idx,plan in enumerate(executablePlan):
@@ -38,9 +39,13 @@ def decomposer(state : ChamberState) -> ChamberState:
                         goals[:idx] + subGoals + goals[idx+1:]
                     )
 
+                    print(newGoals)
+
+
                 logger.info("Decomposer added subGoals successfully")
                 return {
-                    'goals' : newGoals
+                    'goals' : newGoals,
+                    'decmposition_depth' : depth + 1
                 }
             except Exception as e:
                 logger.error(f"Decomposer failed: {e}")
