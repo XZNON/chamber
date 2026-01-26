@@ -11,9 +11,10 @@ def orchestrator(state : ChamberState) -> ChamberState:
     goals = state.get('goals',[])
     idx = state.get('currentGoalIdx')
 
-    if idx >= len(goals):
-        logger.info("All goals completed")
-        return state
+    print(goals)
+    # if idx >= len(goals):
+    #     logger.info("All goals completed")
+    #     return state
 
 
     #get the current goal

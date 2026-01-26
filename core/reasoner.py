@@ -36,6 +36,7 @@ def reasoner(state : ChamberState) -> ChamberState:
         logger.info("Reasoner generated Goals successfully")
 
         return {
+            "currentGoalIdx" : 0,
             "goals":response.goals,
             "error":None
         }
@@ -43,11 +44,7 @@ def reasoner(state : ChamberState) -> ChamberState:
         logger.error(f"Reasoner Failed: {e}")
         return {
             "goals":[],
-            "error":str(e),
-            "metadata":{
-                "source":"reasoner",
-                "status":"failed"
-            }
+            "error":str(e)
         }
 if __name__ == "__main__":
     dummy_state = {"input": ["I want to create a simple full stack shoes selling e commerce website"]}
