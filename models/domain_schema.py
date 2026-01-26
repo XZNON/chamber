@@ -3,6 +3,7 @@ from typing import Literal,List
 
 DomainType = Literal[
     'structure',
+    'configuration',
     'database',
     'backend',
     'frontend',

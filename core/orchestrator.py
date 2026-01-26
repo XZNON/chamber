@@ -1,6 +1,5 @@
 from models.chamber_state import ChamberState
 from utils.domain_classifier import classifyDomains
-from utils.decompostion_heuristic import heuristicNeedsDecomposition
 from core.logger import get_logger
 
 #########################   testing libraries  #########################
@@ -20,11 +19,10 @@ def orchestrator(state : ChamberState) -> ChamberState:
         return {
             "error":str(e),
             "metadata":{
-                "source":"reasoner_[classifyDomains]",
+                "source":"orchestrator_[classifyDomains]",
                 "status":"failed"
             }
         }
-
 
     executionPlan = []
 
@@ -33,6 +31,7 @@ def orchestrator(state : ChamberState) -> ChamberState:
         try:
             #huristicNeedsDecomposition causing the graph to looop over and over and over
             # needDecom = heuristicNeedsDecomposition(goals[i].description) or domainAndDecomposition[i]['needs_decomposition']
+            # print(domainAndDecomposition[i]['domain'])
             executionPlan.append({
                 "domain" : domainAndDecomposition[i]["domain"],
                 "intent" : descriptions[i],
@@ -45,7 +44,7 @@ def orchestrator(state : ChamberState) -> ChamberState:
             return {
                 "error":str(e),
                 "metadata":{
-                    "source":"reasoner_[executionPlans]",
+                    "source":"orchestrator_[executionPlans]",
                     "status":"failed"
             }
             }

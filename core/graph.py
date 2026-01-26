@@ -4,7 +4,6 @@ from core.reasoner import reasoner
 from core.orchestrator import orchestrator
 from core.decomposer import decomposer
 from core.executor import executioner
-from utils.decomposer_router import decomposer_router
 from dotenv import load_dotenv
 from core.logger import get_logger
 import json
@@ -40,7 +39,7 @@ chamberGraph = chamberGraphStruct.compile()
 
 
 if __name__ == "__main__":
-    input = ['create a frontend for my shoe selling store.']
+    input = ['create a frontend for my shoe selling store using react']
 
     res = chamberGraph.invoke({"input" : input})
 

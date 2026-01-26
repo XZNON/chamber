@@ -1,9 +1,8 @@
 #decomposer node
 from models.chamber_state import ChamberState
 from core.logger import get_logger
-from models.reasoner_output_schema import GoalsSchema
+from models.reasoner_output_schema import Goals
 from dataclasses import dataclass
-from utils.decompose_goals import decomposeGoal
 
 logger = get_logger("Decomposer")
 

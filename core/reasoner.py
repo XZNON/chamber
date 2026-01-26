@@ -1,7 +1,7 @@
 from models.chamber_state import ChamberState
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.prompts import PromptTemplate
-from models.reasoner_output_schema import GoalsSchema
+from models.reasoner_output_schema import Goals
 from utils.load_prompt import loadPrompt
 from core.logger import get_logger
 from core.config import MODEL
@@ -13,7 +13,7 @@ def reasoner(state : ChamberState) -> ChamberState:
     inpt = state['input'][-1] 
 
     model = MODEL
-    modelWithStructuredOutput = model.with_structured_output(GoalsSchema,method="function_calling")
+    modelWithStructuredOutput = model.with_structured_output(Goals,method="function_calling")
 
 
     promptTemplate = PromptTemplate(
@@ -36,7 +36,7 @@ def reasoner(state : ChamberState) -> ChamberState:
         logger.info("Reasoner generated Goals successfully")
 
         return {
-            'goals':response.goals,
+            "goals":response.goals,
             "error":None
         }
     except Exception as e:
@@ -52,7 +52,10 @@ def reasoner(state : ChamberState) -> ChamberState:
 if __name__ == "__main__":
     dummy_state = {"input": ["I want to create a simple full stack shoes selling e commerce website"]}
     result = reasoner(dummy_state)
-    print(result)
+    # print(result)
+
+    for i,goal in enumerate(result["goals"],1):
+        print(f"{i}. {goal.description}  [{goal.status}]")
 
 
 

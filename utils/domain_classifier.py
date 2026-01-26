@@ -19,15 +19,16 @@ def classifyDomains(goals :list[str]) -> list[str]:
         Set `needs_decomposition` to `true` if the goal:
         - Uses plural nouns (e.g., "endpoints," "models," "components").
         - Uses broad verbs like "Setup," "Develop," "Implement," or "Design" without a specific singular target.
+        - a goal will have to be used in different domains to work
         - Describes a system with more than one functional responsibility.
-        - Is a milestone that will result in the creation of multiple files.
+        - Is a milestone that will result in the creation of multiple files from differenct domains.
 
         Set `needs_decomposition` to `false` if the goal:
         - Targets a single file or a single specific function (e.g., "Create the User model," "Define the GET /login route").
         - Is a concrete, singular action that an LLM can complete in a single output.
 
         ### DOMAIN SELECTION:
-        Assign EXACTLY ONE from: [structure, backend, database, api, frontend, ui, styling, testing, code, deployment, unknown].
+        Assign EXACTLY ONE from: [structure, configuration, backend, database, api, frontend, ui, styling, testing, code, deployment, unknown].
 
         example:
         goal:
