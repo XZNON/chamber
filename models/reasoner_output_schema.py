@@ -1,7 +1,7 @@
 from pydantic import BaseModel,Field
 from typing import Dict,List,Any,Literal
 
-GoalStatus = Literal['pending','running','done',' failed']
+GoalStatus = Literal['pending','running','done','failed']
 
 class Goal(BaseModel):
     description : str

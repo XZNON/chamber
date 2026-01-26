@@ -2,7 +2,6 @@ from langgraph.graph import StateGraph,START,END
 from models.chamber_state import ChamberState
 from core.reasoner import reasoner
 from core.orchestrator import orchestrator
-from core.decomposer import decomposer
 from core.executor import executioner
 from dotenv import load_dotenv
 from core.logger import get_logger
