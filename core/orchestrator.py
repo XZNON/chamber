@@ -11,10 +11,9 @@ def orchestrator(state : ChamberState) -> ChamberState:
     goals = state.get('goals',[])
     idx = state.get('currentGoalIdx')
 
-    print(goals)
-    # if idx >= len(goals):
-    #     logger.info("All goals completed")
-    #     return state
+    if idx >= len(goals):
+        logger.info("All goals completed")
+        return state
 
 
     #get the current goal
@@ -22,14 +21,12 @@ def orchestrator(state : ChamberState) -> ChamberState:
     logger.info(f"Starting goal {idx+1}/{len(goals)} : {goal.description}")
 
     goal.status = "running"
-    # print(goal,goals)
     try:
         #route the goal to the executioner
         executioner = routeExecutioner(goal.description)
 
         if executioner is None:
             raise RuntimeError(f"No goal executioner found for goal : {goal.description}")
-        
         executioner.execute(goal,state)
 
         goal.status = "done"

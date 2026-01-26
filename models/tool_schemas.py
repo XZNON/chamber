@@ -3,7 +3,7 @@ from typing import Optional
 
 class FileInput(BaseModel):
     filename : str = Field(...,description="name of the file")
-    path : Optional[str] = Field(default=".",description="Directory path where we want to create or write to a fiel")
+    path : Optional[str] = Field(default=".",description="Directory path where we want to create or write to a file")
     content : str = Field(...,description="Text content to write to the file")
 
 class FileOutput(BaseModel):

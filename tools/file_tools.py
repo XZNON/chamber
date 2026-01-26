@@ -5,6 +5,15 @@ import os
 
 logger = get_logger()
 
+def createFolder(folderName : str,created : list[str]):
+    try:
+        os.makedirs(folderName,exist_ok=True)
+        created.append(folderName)
+        logger.info(f"Created directory: {folderName}")
+    except Exception as e:
+        logger.error(f"Failed to create directory: {folderName}")
+        raise
+
 def fileInput(schema : FileInput) -> FileOutput:
     os.makedirs(schema.path,exist_ok=True)
     fullPath = os.path.join(schema.path,schema.filename)

@@ -33,14 +33,14 @@ def buildGraph():
         }
         )
     chamberGraph = chamberGraphStruct.compile()
-    print(chamberGraph.get_graph().draw_mermaid())
+    # print(chamberGraph.get_graph().draw_mermaid())
     return chamberGraph
 
 if __name__ == "__main__":
     app = buildGraph()
 
     initial_state = {
-        "input": ["Build an Enigma machine and a website for me"],
+        "input": ["Buid a frontend page for me to sell shoes"],
         "goals": [],
         "current_goal_index": 0,
         "workspace": {},
