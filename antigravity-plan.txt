@@ -1,0 +1,40 @@
+PathWay - Trip Planning Flutter App
+This plan details the architecture and implementation steps for building the PathWay mobile application using Flutter, based on the provided Stitch HTML/CSS designs.
+
+App Architecture
+We will implement a clean, scalable feature-first folder structure:
+
+lib/core/ - Theme, routing, constants, utils
+lib/features/ - Feature modules (Home, Location, Trip Plan, Itinerary, Navigation, Completion)
+lib/shared/ - Reusable widgets (Buttons, Cards, Maps)
+Key Technical Decisions
+Routing: go_router for declarative routing and deep linking, allowing smooth transitions between the extensive linear flow.
+State Management: flutter_riverpod for scalable state injection and managing trip data (or standard Provider depending on preference. We'll use Riverpod for "production grade").
+Theming: Custom ThemeData utilizing google_fonts (Sora, DM Sans, DM Mono) to exactly match the Stitch design specs.
+Assets: SVG icons (via flutter_svg) and network/placeholder images to simulate the Wandlerlog-like UI.
+Implementation Steps
+Project Initialization & Core Setup
+
+Create new Flutter project pathway_app.
+Add dependencies (google_fonts, go_router, flutter_riverpod, flutter_svg).
+Define color palette, text themes, and spacing inside core/theme/app_theme.dart.
+Common Widgets Development
+
+Primary/Secondary Buttons
+Simulated Map Widget (Gradient background with SVG overlay)
+Custom Cards (Destination, Trip progress, Memory placeholders)
+Screen Development (Linear Flow)
+
+HomeScreen (Bottom Nav, Carousels)
+LocationDetailsScreen (Hero image, metrics, simulated map)
+PlanTripScreen (Form inputs, stepper)
+TripItineraryScreen (Accordion days, stops list)
+StartDayScreen (Large map, timeline)
+LiveNavigationScreen (Fullscreen map, floating pill)
+LocationReachedScreen (Arrival header, memory input)
+DaySummaryScreen (Stats, memory gallery)
+FinalCompletionScreen (Confetti, trophy, stats grid)
+Refinement
+
+Page transition animations (Slide-in right to left).
+Micro-animations (Button presses, list item scaling).
